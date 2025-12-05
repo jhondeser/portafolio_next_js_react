@@ -119,7 +119,7 @@ export default function ProjectsPage() {
               ¿Tienes un proyecto en mente?
             </span>
             <a 
-              href="mailto:tuemail@ejemplo.com" 
+              href="mailto:jhonatan.mog2829@gmail.com" 
               className="ml-4 font-medium hover:underline"
             >
               Hablemos →
