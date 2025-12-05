@@ -1,43 +1,12 @@
 import Link from 'next/link'
 import FeaturedProjectCard from '@/components/FeaturedProjectCard'
-import { Project } from '@/types'
-import { projectImages } from '@/lib/images'
-import Image from 'next/image'
+import { projectsData, getFeaturedProjects } from '@/data/projects_data'
 
-const featuredProjects: Project[] = [
-  {
-    id: 1,
-    title: "E-commerce Orgánico",
-    description: "Tienda online para productos naturales con enfoque en experiencia de usuario y rendimiento.",
-    image: projectImages.ecomerceNatural,
-    tags: ["React", "Next.js", "TypeScript", "Tailwind"],
-    link: "/projects",
-    featured: true,
-    category: "web"
-  },
-  {
-    id: 2,
-    title: "App de Meditación", 
-    description: "Aplicación web para prácticas de mindfulness con seguimiento de progreso y comunidad.",
-    image: projectImages.meditacion,
-    tags: ["TypeScript", "React", "Framer Motion", "Node.js"],
-    link: "/projects",
-    category: "web"
-  },
-  {
-    id: 3,
-    title: "Plataforma Educativa",
-    description: "Sistema de aprendizaje online con enfoque en accesibilidad y experiencia intuitiva.",
-    image: projectImages.education,
-    tags: ["Next.js", "MongoDB", "NextAuth", "Cloudinary"],
-    link: "/projects",
-    featured: true,
-    category: "fullstack"
-  },
-]
 
 
 export default function Proyectos_destacados() {
+  const featuredProjects = getFeaturedProjects()
+
   return (
     <section className="py-20 px-4 bg-white/5 backdrop-blur-sm border-t border-white/10">
         <div className="container mx-auto">

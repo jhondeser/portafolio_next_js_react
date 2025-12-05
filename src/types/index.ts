@@ -1,3 +1,4 @@
+// /types/index.ts
 import type { StaticImageData } from 'next/image'
 
 export interface Project {
@@ -9,6 +10,10 @@ export interface Project {
   link: string
   featured?: boolean
   category: 'web' | 'mobile' | 'design' | 'fullstack'
+  // Opcional: añade propiedades que puedas necesitar
+  github?: string
+  year?: number
+  status?: 'live' | 'development' | 'archived'
 }
 
 export interface NavItem {
