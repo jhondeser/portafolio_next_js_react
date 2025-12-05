@@ -37,7 +37,7 @@ export default function Proyectos_destacados() {
             </div>
 
             {/* CTA para ver todos los proyectos */}
-            <div className="text-center mt-12">
+            <div className="text-center mt-12 py-15">
                 <Link 
                     href="/projects" 
                     className="inline-flex items-center text-teal-300 hover:text-teal-200 font-light tracking-wide transition-all duration-300 group/cta border border-teal-300/30 hover:border-teal-300/70 px-8 py-4"
