@@ -57,13 +57,13 @@ export default function Footer() {
                   href="mailto:hola@ejemplo.com"
                   className="block text-slate-400 hover:text-teal-400 font-light tracking-wide transition-colors duration-300"
                 >
-                  hola@ejemplo.com
+                  jhonatan.mog2829@gmail.com
                 </a>
                 <a
                   href="tel:+1234567890"
                   className="block text-slate-400 hover:text-teal-400 font-light tracking-wide transition-colors duration-300"
                 >
-                  +1 234 567 890
+                  +34 661409658
                 </a>
                 <div className="flex space-x-4 pt-2">
                   {[

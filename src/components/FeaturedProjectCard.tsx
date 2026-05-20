@@ -73,7 +73,7 @@ export default function FeaturedProjectCard({ project, index }: FeaturedProjectC
   return (
     <article 
       ref={cardRef}
-      className={`group bg-white/10 backdrop-blur-sm border border-white/20 rounded-none hover:border-teal-300/50 transition-all duration-700 hover:transform hover:-translate-y-2 overflow-hidden ${getEntranceDirection()}`}
+      className={`group bg-teal-950/90 backdrop-blur-sm border border-white/20 rounded-none hover:border-teal-300/50 transition-all duration-700 hover:transform hover:-translate-y-2 overflow-hidden ${getEntranceDirection()}`}
       style={{ 
         transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
       }}

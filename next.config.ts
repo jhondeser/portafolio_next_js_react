@@ -12,6 +12,20 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {
+    rules: {
+      // ✅ Configuración para archivos de video
+      '*.mp4': {
+        type: 'asset', // Los trata como recursos estáticos
+      },
+      '*.webm': {
+        type: 'asset',
+      },
+      '*.mov': {
+        type: 'asset',
+      },
+    },
+  },
 }
 
 module.exports = nextConfig

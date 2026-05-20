@@ -12,12 +12,13 @@ export default function Home() {
       {/* Hero queda sin Reveal: ya esta visible al cargar */}
       <Hero />
 
-      <Reveal>
-        <Proyectos_destacados />
-      </Reveal>
 
       <Reveal>
         <Services />
+      </Reveal>
+
+      <Reveal>
+        <Proyectos_destacados />
       </Reveal>
 
       <Reveal>
