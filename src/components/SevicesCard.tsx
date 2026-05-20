@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { ServiceCategory } from '@/types'
 
 interface ServiceCardProps {
   category: ServiceCategory
+  index?: number // Añadimos index para efectos personalizados
 }
 
 /**
@@ -12,9 +13,46 @@ interface ServiceCardProps {
  * Anverso: icono, título, tagline, "desde X€" y para quién es.
  * Reverso: los 3 niveles disponibles con su rango de precio.
  */
-export default function ServiceCard({ category }: ServiceCardProps) {
+export default function ServiceCard({ category, index = 0 }: ServiceCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
   const [isTouched, setIsTouched] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // Efecto de entrada al hacer scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // Delay progresivo basado en el índice
+          const delay = index * 150
+          setTimeout(() => setIsVisible(true), delay)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [index])
+
+  // Dirección de entrada según el índice
+  const getEntranceDirection = () => {
+    if (!isVisible) {
+      switch(index % 4) {
+        case 0: return 'opacity-0 -translate-x-16' // Izquierda
+        case 1: return 'opacity-0 -translate-y-16' // Arriba
+        case 2: return 'opacity-0 translate-y-16'  // Abajo
+        case 3: return 'opacity-0 translate-x-16'  // Derecha
+        default: return 'opacity-0 translate-y-12'
+      }
+    }
+    return 'opacity-100 translate-x-0 translate-y-0'
+  }
 
   const handleInteraction = () => setIsFlipped((v) => !v)
   const handleTouchStart = () => setIsTouched(true)
@@ -22,7 +60,9 @@ export default function ServiceCard({ category }: ServiceCardProps) {
 
   return (
     <div
-      className="group h-96 [perspective:1000px]"
+      ref={cardRef}
+      className={`group h-[450px] [perspective:1000px] transition-all duration-700 ${getEntranceDirection()}`}
+      style={{ transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
       onMouseEnter={() => !isTouched && setIsFlipped(true)}
       onMouseLeave={() => !isTouched && setIsFlipped(false)}
       onClick={handleInteraction}

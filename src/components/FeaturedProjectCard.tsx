@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Project } from '@/types'
@@ -8,11 +11,76 @@ interface FeaturedProjectCardProps {
 }
 
 export default function FeaturedProjectCard({ project, index }: FeaturedProjectCardProps) {
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLElement>(null)
+  const hasAnimatedRef = useRef(false)
+
+  useEffect(() => {
+    // Crear el observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Cuando la card entra en el viewport
+          if (entry.isIntersecting && !hasAnimatedRef.current) {
+            // Delay progresivo basado en el índice
+            const delay = 300 + (index * 300) // 300ms, 500ms, 700ms
+            const timer = setTimeout(() => {
+              setIsVisible(true)
+              hasAnimatedRef.current = true
+            }, delay)
+            
+            return () => clearTimeout(timer)
+          }
+        })
+      },
+      {
+        threshold: 0.2, // Cuando el 20% de la card sea visible
+        rootMargin: '0px 0px -50px 0px' // Ajuste fino (opcional)
+      }
+    )
+
+    // Observar la card
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    // Limpiar observer
+    return () => {
+      if (cardRef.current) {
+        observer.unobserve(cardRef.current)
+      }
+      observer.disconnect()
+    }
+  }, [index])
+
+  // Determinar la dirección de entrada según el índice
+  const getEntranceDirection = () => {
+    if (!isVisible) {
+      switch(index) {
+        case 0: // Izquierda
+          return '-translate-x-20 opacity-0'
+        case 1: // Centro
+          return '-translate-y-20 opacity-0'
+        case 2: // Derecha
+          return 'translate-x-20 opacity-0'
+        default:
+          return 'opacity-0 translate-y-12'
+      }
+    }
+    return 'opacity-100 translate-x-0 translate-y-0'
+  }
+
   return (
-    <article className="group bg-white/10 backdrop-blur-sm border border-white/20 rounded-none hover:border-teal-300/50 transition-all duration-500 hover:transform hover:-translate-y-2 overflow-hidden">
+    <article 
+      ref={cardRef}
+      className={`group bg-white/10 backdrop-blur-sm border border-white/20 rounded-none hover:border-teal-300/50 transition-all duration-700 hover:transform hover:-translate-y-2 overflow-hidden ${getEntranceDirection()}`}
+      style={{ 
+        transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+    >
       
-      {/* Contenedor de imagen FIXED */}
-      <div className="relative h-48 w-full overflow-hidden"> {/* ← Added w-full */}
+      {/* Contenedor de imagen */}
+      <div className="relative h-48 w-full overflow-hidden">
         <Image 
           src={project.image} 
           alt={`Captura del proyecto ${project.title}`}
