@@ -14,19 +14,16 @@ export default function Proyectos_destacados() {
   const sectionRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // ── Scroll tracking ──────────────────────────────────────────
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   })
 
-  // ── Parallax por capas ───────────────────────────────────────
-  const bgY      = useTransform(scrollYProgress, [0, 1], ["0%", "65%"])  // video: más rápido
-  const floatsY  = useTransform(scrollYProgress, [0, 1], ["0%", "45%"])  // decorativos: medio
-  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]) // contenido: casi quieto
+  const bgY      = useTransform(scrollYProgress, [0, 1], ["0%", "65%"])
+  const floatsY  = useTransform(scrollYProgress, [0, 1], ["0%", "45%"])
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"])
   const overlayO = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.5, 0.3, 0.3, 0.6])
 
-  // ── Scroll controla el video ─────────────────────────────────
   const videoTime = useTransform(scrollYProgress, [0, 1], [0, videoDuration])
 
   useMotionValueEvent(videoTime, "change", (time) => {
@@ -56,56 +53,60 @@ export default function Proyectos_destacados() {
     <motion.section
       ref={sectionRef}
       className="relative w-full"
-      style={{ minHeight: '100vh', position: 'relative', zIndex: 10, isolation: 'isolate' }}
+      style={{ minHeight: '130vh', position: 'relative', zIndex: 10, isolation: 'isolate' }}
     >
-      {/* ── CAPA 1: VIDEO (más rápido) ── */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* ── CAPA 1: VIDEO ── */}
+      <div className="absolute inset-0 z-0 overflow-hidden ">
+
+        {/* ✅ motion.div solo lleva y — sin mezclar CSS normal */}
         <motion.div
           style={{ y: bgY }}
-          className="absolute will-change-transform"
-          style={{
-            top: '-20%',
-            left: 0,
-            right: 0,
-            bottom: '-20%',
-          }}
+          className="absolute inset-0 will-change-transform"
         >
-          <video
-            ref={videoRef}
-            autoPlay={false}
-            loop={false}
-            muted
-            playsInline
-            preload="auto"
+          {/* ✅ div hijo lleva el posicionamiento CSS */}
+          <div
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block'
+              position: 'absolute',
+              top: '-20%',
+              left: 0,
+              right: 0,
+              height: '140%',
             }}
           >
-            <source src={samuraiVideo} type="video/mp4" />
-          </video>
+            <video
+              ref={videoRef}
+              autoPlay={false}
+              loop={false}
+              muted
+              playsInline
+              preload="auto"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                display: 'block'
+              }}
+            >
+              <source src={samuraiVideo} type="video/mp4" />
+            </video>
+          </div>
         </motion.div>
 
-        {/* Overlay dinámico */}
         <motion.div
           className="absolute inset-0"
           style={{ backgroundColor: 'rgba(0,0,0,1)', opacity: overlayO }}
         />
-        {/* Gradiente inferior fijo */}
         <div
           className="absolute inset-0"
           style={{ background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7))' }}
         />
       </div>
 
-      {/* ── CAPA 2: DECORATIVOS (velocidad media) ── */}
+      {/* ── CAPA 2: DECORATIVOS ── */}
       <motion.div
         style={{ y: floatsY }}
         className="absolute inset-0 z-5 pointer-events-none will-change-transform"
       >
-        {/* Puntos flotantes */}
         <div
           className={`absolute top-16 left-12 transition-all duration-1000 ${
             isVisible ? 'opacity-20 translate-x-0' : 'opacity-0 -translate-x-8'
@@ -138,8 +139,6 @@ export default function Proyectos_destacados() {
         >
           <div className="w-2 h-2 bg-teal-300 rounded-full animate-float" style={{ animationDelay: '2s' }} />
         </div>
-
-        {/* Líneas laterales decorativas */}
         <div
           className={`absolute left-8 top-1/2 -translate-y-1/2 transition-all duration-1000 ${
             isVisible ? 'opacity-15' : 'opacity-0'
@@ -158,15 +157,14 @@ export default function Proyectos_destacados() {
         </div>
       </motion.div>
 
-      {/* ── CAPA 3: CONTENIDO (más lento) ── */}
+      {/* ── CAPA 3: CONTENIDO ── */}
       <motion.div
-        style={{ y: contentY }}
         className="relative z-20 will-change-transform"
         style={{
+          y: contentY,
           maxWidth: '1280px',
           marginLeft: 'auto',
           marginRight: 'auto',
-          minHeight: '100vh',
           paddingTop: '4rem',
           paddingBottom: '4rem',
           paddingLeft: '1rem',
@@ -207,7 +205,7 @@ export default function Proyectos_destacados() {
           </p>
         </div>
 
-        {/* Grid de proyectos */}
+        {/* Grid */}
         <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto w-full"
           style={{
