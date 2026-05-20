@@ -31,3 +31,36 @@ export interface Skill {
 export interface HeaderProps {
   currentPath?: string
 }
+
+// --- Servicios ---
+export type ServiceCategoryId = 'web' | 'bot' | 'crm' | 'n8n'
+
+export interface ServiceTier {
+  name: string              // "Landing page", "Bot FAQ simple"...
+  priceRange: string        // "300 – 600€"
+  priceFrom: number         // 300 (para ordenar y mostrar "Desde X€")
+  description: string       // 1 línea
+  bestFor: string           // "Para quien necesita..."
+  deliveryTime: string      // "1 semana"
+  features: string[]        // qué incluye
+  recommended?: boolean     // tier intermedio destacado
+}
+
+export interface ServiceCategory {
+  id: ServiceCategoryId
+  icon: string              // emoji
+  title: string             // "Desarrollo Web"
+  tagline: string           // pitch corto
+  description: string       // párrafo más largo
+  audience: string          // "Para pymes, profesionales..."
+  priceFromLabel: string    // "Desde 300€"
+  tiers: ServiceTier[]      // 3 niveles
+}
+
+export interface RecurringPlan {
+  name: string              // "Mantenimiento web"
+  price: string             // "50 – 150€/mes"
+  description: string
+  includes: string[]
+  icon: string
+}

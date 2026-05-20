@@ -1,137 +1,121 @@
 'use client'
 
 import { useState } from 'react'
-
-interface Service {
-  id: number
-  title: string
-  description: string
-  icon: string
-  features: string[]
-}
+import type { ServiceCategory } from '@/types'
 
 interface ServiceCardProps {
-  service: Service
+  category: ServiceCategory
 }
 
-export default function ServiceCard({ service }: ServiceCardProps) {
+/**
+ * Tarjeta resumen de una categoría de servicio (Web, Bot, CRM o n8n).
+ * Anverso: icono, título, tagline, "desde X€" y para quién es.
+ * Reverso: los 3 niveles disponibles con su rango de precio.
+ */
+export default function ServiceCard({ category }: ServiceCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
   const [isTouched, setIsTouched] = useState(false)
 
-  const handleInteraction = () => {
-    setIsFlipped(!isFlipped)
-  }
-
-  const handleTouchStart = () => {
-    setIsTouched(true)
-  }
-
-  const handleTouchEnd = () => {
-    setTimeout(() => setIsTouched(false), 300)
-  }
+  const handleInteraction = () => setIsFlipped((v) => !v)
+  const handleTouchStart = () => setIsTouched(true)
+  const handleTouchEnd = () => setTimeout(() => setIsTouched(false), 300)
 
   return (
-    <div 
-      className="group h-80 [perspective:1000px]"
+    <div
+      className="group h-96 [perspective:1000px]"
       onMouseEnter={() => !isTouched && setIsFlipped(true)}
       onMouseLeave={() => !isTouched && setIsFlipped(false)}
       onClick={handleInteraction}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className={`relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] ${
-        isFlipped ? '[transform:rotateY(180deg)]' : ''
-      }`}>
-        
-        {/* FRONT - Logo y título */}
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm border border-slate-200 rounded-none group-hover:border-teal-300 transition-all duration-500 shadow-sm [backface-visibility:hidden] cursor-pointer">
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-            {/* Icono del servicio */}
-            <div className="text-5xl mb-6 text-teal-600">
-              {service.icon}
-            </div>
-            
+      <div
+        className={`relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] ${
+          isFlipped ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* FRONT */}
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm border border-slate-200/20 group-hover:border-teal-300/60 transition-all duration-500 shadow-sm [backface-visibility:hidden] cursor-pointer flex flex-col">
+          <div className="flex flex-col h-full p-6 text-center">
+            {/* Icono */}
+            <div className="text-5xl mb-4">{category.icon}</div>
+
             {/* Título */}
-            <h3 className="text-2xl font-light text-white/90 mb-4 tracking-wide">
-              {service.title}
+            <h3 className="text-2xl font-light text-white mb-2 tracking-wide">
+              {category.title}
             </h3>
-            
-            {/* Descripción breve */}
-            <p className="text-white/90 leading-relaxed font-light text-sm max-w-xs">
-              {service.description}
+
+            {/* Tagline */}
+            <p className="text-teal-200/90 text-sm font-light mb-4 leading-relaxed">
+              {category.tagline}
             </p>
-            
-            {/* Indicadores de interacción */}
-            <div className="mt-6 flex flex-col items-center gap-2">
-              {/* Para desktop */}
-              <div className="hidden md:block  text-white/90 text-xs font-light tracking-wide group-hover:opacity-100 transition-opacity duration-300">
-                Pasa el cursor para más detalles
+
+            {/* Para quién */}
+            <p className="text-white/70 text-xs font-light mb-6 leading-relaxed flex-1">
+              {category.audience}
+            </p>
+
+            {/* Precio desde */}
+            <div className="pt-4 border-t border-white/15">
+              <span className="block text-white/50 text-xs uppercase tracking-widest mb-1">
+                Inversión
+              </span>
+              <span className="text-white text-xl font-light">
+                {category.priceFromLabel}
+              </span>
+            </div>
+
+            {/* Indicador hover */}
+            <div className="mt-4">
+              <div className="hidden md:block text-white/60 text-xs font-light tracking-wide">
+                Pasa el cursor para ver los niveles
               </div>
-              {/* Para móvil */}
-              <div className="md:hidden text-white/90 text-xs font-light tracking-wide flex items-center gap-1">
-                <span>Toca para ver detalles</span>
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
+              <div className="md:hidden text-white/60 text-xs font-light tracking-wide">
+                Toca para ver los niveles
               </div>
             </div>
           </div>
         </div>
-        
-        {/* BACK - Features */}
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm border border-teal-300 rounded-none p-6 [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer">
-          <div className="h-full flex flex-col">
-            {/* Título en el back */}
-            <h4 className="text-lg font-light text-teal-700 mb-4 tracking-wide text-center">
-              {service.title}
+
+        {/* BACK — los 3 niveles */}
+        <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-sm border border-teal-300/50 [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer flex flex-col">
+          <div className="h-full flex flex-col p-5">
+            <h4 className="text-base font-light text-teal-300 mb-4 tracking-wide text-center border-b border-white/10 pb-3">
+              {category.title} · Niveles
             </h4>
-            
-            {/* Lista de features */}
-            <div className="flex-1 overflow-hidden">
-                <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
-                    <ul className="space-y-3">
-                    {service.features.map((feature, index) => (
-                        <li 
-                        key={index}
-                        className="flex items-start text-slate-700 text-sm leading-relaxed font-light group/feature hover:bg-white/50 rounded-lg p-2 transition-all duration-300"
-                        >
-                        <div className="flex items-start w-full">
-                            <div className="flex-shrink-0 mt-0.5">
-                            <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center group-hover/feature:bg-teal-200 transition-colors duration-300">
-                                <svg 
-                                className="w-3 h-3 text-teal-600" 
-                                fill="currentColor" 
-                                viewBox="0 0 20 20"
-                                >
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                            </div>
-                            <span className="ml-3 flex-1 group-hover/feature:text-slate-800 transition-colors duration-300">
-                            {feature}
-                            </span>
-                        </div>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
-            </div>
-            
-            {/* Indicadores de interacción en el back */}
-            <div className="text-center mt-4 pt-4 border-t border-slate-200">
-              <div className="flex flex-col items-center gap-2">
-                {/* Para desktop */}
-                <div className="hidden md:block text-slate-400 text-xs font-light tracking-wide">
-                  Aleja el cursor para volver
-                </div>
-                {/* Para móvil */}
-                <div className="md:hidden text-teal-600 text-xs font-light tracking-wide flex items-center gap-1">
-                  <span>Toca para volver</span>
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                  </svg>
-                </div>
-              </div>
+
+            <ul className="space-y-3 flex-1 overflow-y-auto pr-1">
+              {category.tiers.map((tier) => (
+                <li
+                  key={tier.name}
+                  className={`p-3 border ${
+                    tier.recommended
+                      ? 'border-amber-300/40 bg-amber-300/5'
+                      : 'border-white/10 bg-white/5'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <span className="text-white font-light text-sm leading-tight">
+                      {tier.name}
+                    </span>
+                    {tier.recommended && (
+                      <span className="text-[10px] text-amber-300 tracking-widest uppercase whitespace-nowrap">
+                        Popular
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-teal-200 font-light">{tier.priceRange}</span>
+                    <span className="text-white/50">{tier.deliveryTime}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="text-center pt-3 mt-3 border-t border-white/10">
+              <span className="text-teal-300/80 text-xs font-light tracking-wide">
+                Mira la tabla completa abajo ↓
+              </span>
             </div>
           </div>
         </div>
